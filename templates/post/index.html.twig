@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <h1 class="my-5">Liste de nos articles</h1>
+    <table class="table table-stripped table-hover table-secondary">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Contenu</th>
+                <th>Date de création</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in postList %}
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.content }}</td>
+                    <td>{{ post.createdAt|date('d/m/Y h:i:s') }}</td>
+                    <td>#</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="text-primary text-center">Il n'y a pas d'articles actuellement</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

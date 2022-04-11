@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1 class="my-5">Liste des catégories</h1>
+
+    <table class="table table-stripped table-hover table-primary">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom de la catégorie</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if categoriesList %}
+                {% for category in categoriesList %}
+                    <tr>
+                        <td>{{ category.id }}</td>
+                        <td>{{ category.name }}</td>
+                        <td>#</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-primary text-center">Il n'y a actuellement aucune catégorie</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}
