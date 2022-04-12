@@ -20,7 +20,11 @@
                         <td>{{ category.name }}</td>
                         {# On génère l'url sur lequel cliqué grâce à la fonction path de twig #}
                         {# Ce path prend le nom de la route à charger ainsi que les paramètres nécessaires #}
-                        <td><a href="{{ path('single_category', {id: category.id}) }}"><button class="btn btn-primary">Voir plus</button></a></td>
+                        <td>
+                            <a href="{{ path('single_category', {id: category.id}) }}">
+                                <button class="btn btn-primary">Voir plus</button>
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
             {% else %}
