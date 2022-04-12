@@ -20,7 +20,7 @@
                     <td>{{ post.title }}</td>
                     <td>{{ post.content }}</td>
                     <td>{{ post.createdAt|date('d/m/Y h:i:s') }}</td>
-                    <td>#</td>
+                    <td><a href="{{ path('single_post', {id: post.id}) }}"><button class="btn btn-primary">Voir plus</button></a></td>
                 </tr>
             {% else %}
                 <tr>

@@ -1,0 +1,7 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1 class="my-3">{{post.title}}</h1>
+    <p>{{post.content}}</p>
+    <small>Article écrit le {{post.createdAt|date('d M Y')}} à {{ post.createdAt|date('h:i') }}</small>
+{% endblock %}

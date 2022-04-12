@@ -1,0 +1,3 @@
+.form-control>input, .form-control>textarea{
+    border-radius: 10px;
+}
