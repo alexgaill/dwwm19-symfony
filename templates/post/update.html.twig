@@ -1,0 +1,8 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1 class="my-3">Modification de l'article <span class="text-secondary fw-bold">{{post.title}}</span></h1>
+
+    {{form_start(form)}}
+    {{form_end(form)}}
+{% endblock %}

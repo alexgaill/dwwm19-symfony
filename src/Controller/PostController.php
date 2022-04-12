@@ -53,4 +53,33 @@ class PostController extends AbstractController
             'form' => $form
         ]);
     }
+
+    #[Route('/post/{id}/update', name:'update_post', requirements:['id' => "[0-9]+"], methods:["GET", "POST"])]
+    public function update (Post $post, ManagerRegistry $manager, Request $request):Response
+    {
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $manager->getManager();
+            $em->persist($post);
+            $em->flush();
+
+            return $this->redirectToRoute("single_post", ['id' => $post->getId()]);
+        }
+
+        return $this->renderForm('post/update.html.twig', [
+            'form' => $form,
+            'post' => $post
+        ]);
+    }
+
+    #[Route("/post/{id}/delete", name:'delete_post', requirements:['id' => "[0-9]+"], methods:["GET"])]
+    public function delete(Post $post, ManagerRegistry $manager): Response
+    {
+        $em = $manager->getManager();
+        $em->remove($post);
+        $em->flush();
+        return $this->redirectToRoute('app_post');
+    }
 }
