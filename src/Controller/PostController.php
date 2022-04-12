@@ -43,6 +43,7 @@ class PostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
+            $post->setCreatedAt(new \DateTime());
             $em = $manager->getManager();
             $em->persist($post);
             $em->flush();
