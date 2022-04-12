@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Form\CategoryType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -79,5 +80,34 @@ class CategoryController extends AbstractController
             'formCategory' => $form,
             'category' => $category
         ]);
+    }
+
+    #[Route('/category/{id}/update', name:'update_category', requirements:['id' => "[0-9]+"], methods:["GET", "POST"])]
+    public function update (Category $category, ManagerRegistry $manager, Request $request):Response
+    {
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $manager->getManager();
+            $em->persist($category);
+            $em->flush();
+
+            return $this->redirectToRoute("single_category", ['id' => $category->getId()]);
+        }
+
+        return $this->renderForm('category/update.html.twig', [
+            'formCategory' => $form,
+            'category' => $category
+        ]);
+    }
+
+    #[Route("/category/{id}/delete", name:'delete_category', requirements:['id' => "[0-9]+"], methods:["GET"])]
+    public function delete(Category $category, ManagerRegistry $manager): Response
+    {
+        $em = $manager->getManager();
+        $em->remove($category);
+        $em->flush();
+        return $this->redirectToRoute('app_category');
     }
 }

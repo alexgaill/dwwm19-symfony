@@ -1,0 +1,6 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1 class="my-3">Modification de la catégorie <span class="fw-bold text-secondary">{{category.name}}</span></h1>
+    {% include "category/_form.html.twig" %}
+{% endblock %}
