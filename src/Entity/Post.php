@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
@@ -14,12 +15,18 @@ class Post
     private $id;
 
     #[ORM\Column(type: 'string', length: 100)]
+    #[Assert\Length(
+        min:3,
+        max:100
+    )]
     private $title;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message:"Ce champs doit être rempli")]
     private $content;
 
     #[ORM\Column(type: 'datetime')]
+    #[Assert\DateTime()]
     private $createdAt;
 
     public function getId(): ?int
