@@ -25,8 +25,8 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/category/{id}', name:'single_category', requirements:['id' => '[0-9]+'])]
-    public function single ($id, ManagerRegistry $manager): Response
+    #[Route('/category/{id}', name:'single_category', requirements:['id' => '\d+'])]
+    public function single (int $id, ManagerRegistry $manager): Response
     {
         // Charge une catégorie en fonction de l'id reçu
         $category = $manager->getRepository(Category::class)->find($id);
@@ -36,6 +36,7 @@ class CategoryController extends AbstractController
                 'category' => $category
             ]);
         } else {
+            $this->addFlash("danger", "La catégorie demandée n'existe pas");
             // Sinon on redirige l'utilisateur vers la page contenant toutes les catégories
             return $this->redirectToRoute('app_category');
         }
@@ -73,6 +74,8 @@ class CategoryController extends AbstractController
             $em = $manager->getManager();
             $em->persist($category);
             $em->flush();
+            // Ajout d'un message flash pour prévenir du résultat de l'opération
+            $this->addFlash("success", "La catégorie a bien été ajoutée");
             return $this->redirectToRoute('app_category');
         }
 
@@ -83,31 +86,47 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/category/{id}/update', name:'update_category', requirements:['id' => "[0-9]+"], methods:["GET", "POST"])]
-    public function update (Category $category, ManagerRegistry $manager, Request $request):Response
+    public function update ($id, ManagerRegistry $manager, Request $request): Response
     {
-        $form = $this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
+        $category = $manager->getRepository(Category::class)->find($id);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $manager->getManager();
-            $em->persist($category);
-            $em->flush();
+        if ($category) {
 
-            return $this->redirectToRoute("single_category", ['id' => $category->getId()]);
+            $form = $this->createForm(CategoryType::class, $category);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em = $manager->getManager();
+                $em->persist($category);
+                $em->flush();
+
+                $this->addFlash("success", "La catégorie a bien été modifiée");
+                return $this->redirectToRoute("single_category", ['id' => $category->getId()]);
+            }
+
+            return $this->renderForm('category/update.html.twig', [
+                'formCategory' => $form,
+                'category' => $category
+            ]);
+        } else {
+            $this->addFlash("danger", "La catégorie demandée n'existe pas");
+            return $this->redirectToRoute('app_category');
         }
 
-        return $this->renderForm('category/update.html.twig', [
-            'formCategory' => $form,
-            'category' => $category
-        ]);
     }
 
     #[Route("/category/{id}/delete", name:'delete_category', requirements:['id' => "[0-9]+"], methods:["GET"])]
-    public function delete(Category $category, ManagerRegistry $manager): Response
+    public function delete($id, ManagerRegistry $manager): Response
     {
-        $em = $manager->getManager();
-        $em->remove($category);
-        $em->flush();
+        $category = $manager->getRepository(Category::class)->find($id);
+        if ($category) {
+            $em = $manager->getManager();
+            $em->remove($category);
+            $em->flush();
+            $this->addFlash("success", "La catégoriea été supprimée");
+        } else {
+            $this->addFlash("danger", "La catégorie demandée n'existe pas");
+        }
         return $this->redirectToRoute('app_category');
     }
 }

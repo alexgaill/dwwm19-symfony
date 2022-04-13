@@ -29,9 +29,10 @@ class PostController extends AbstractController
             return $this->render('post/single.html.twig', [
                 'post' => $post
             ]);
+        } else {   
+            $this->addFlash("danger", "L'article demandé n'existe pas");
+            return $this->redirectToRoute("app_post");
         }
-
-        return $this->redirectToRoute("app_post");
     }
 
     #[Route('/post/save', name:'save_post', methods: ['GET', 'POST'])]
@@ -47,6 +48,7 @@ class PostController extends AbstractController
             $em = $manager->getManager();
             $em->persist($post);
             $em->flush();
+            $this->addFlash("success", "L'article a été ajouté avec succés");
             return $this->redirectToRoute('single_post', ['id' => $post->getId()], 201);
         }
         return $this->renderForm('post/save.html.twig', [
@@ -55,31 +57,45 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/{id}/update', name:'update_post', requirements:['id' => "[0-9]+"], methods:["GET", "POST"])]
-    public function update (Post $post, ManagerRegistry $manager, Request $request):Response
+    public function update ($id, ManagerRegistry $manager, Request $request):Response
     {
-        $form = $this->createForm(PostType::class, $post);
-        $form->handleRequest($request);
+        $post = $manager->getRepository(Post::class)->find($id);
+        if ($post){
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $manager->getManager();
-            $em->persist($post);
-            $em->flush();
-
-            return $this->redirectToRoute("single_post", ['id' => $post->getId()]);
+            $form = $this->createForm(PostType::class, $post);
+            $form->handleRequest($request);
+            
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em = $manager->getManager();
+                $em->persist($post);
+                $em->flush();
+                $this->addFlash("success", "L'article a été modifié");
+                return $this->redirectToRoute("single_post", ['id' => $post->getId()]);
+            }
+            
+            return $this->renderForm('post/update.html.twig', [
+                'form' => $form,
+                'post' => $post
+            ]);
+        } else {
+            $this->addFlash("danger", "L'article demandé n'existe pas");
+            return $this->redirectToRoute('app_post');
         }
-
-        return $this->renderForm('post/update.html.twig', [
-            'form' => $form,
-            'post' => $post
-        ]);
     }
 
     #[Route("/post/{id}/delete", name:'delete_post', requirements:['id' => "[0-9]+"], methods:["GET"])]
-    public function delete(Post $post, ManagerRegistry $manager): Response
+    public function delete($id, ManagerRegistry $manager): Response
     {
-        $em = $manager->getManager();
-        $em->remove($post);
-        $em->flush();
-        return $this->redirectToRoute('app_post');
+        $post = $manager->getRepository(Post::class)->find($id);
+        if ($post) {
+
+            $em = $manager->getManager();
+            $em->remove($post);
+            $em->flush();
+            $this->addFlash("success", "L'article a été supprimé");
+        } else {
+            $this->addFlash("danger", "L'article demandé n'existe pas");
+        }
+            return $this->redirectToRoute('app_post');
     }
 }
