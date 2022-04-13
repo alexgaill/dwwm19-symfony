@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="text-center">
+    <h1 class="my-3">Bien sur mon SuperBlog</h1>
+
+    <h2>Retrouvez la liste des catégories</h2>
+
+    <ul>
+        {% for category in categories %}
+            <li>{{ category.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Retrouvez la liste des articles</h2>
+
+    <ul>
+        {% for post in posts %}
+            <li>{{ post.title }} - catégorie: {{post.category.name}}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -2,8 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Category;
 use App\Entity\Post;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,6 +22,14 @@ class PostType extends AbstractType
             ])
             ->add('content', TextareaType::class, [
                 'label' => "Contenu de l'article"
+            ])
+            // Pour faire référence à une relation, on ajoute un champs EntityType
+            ->add('category', EntityType::class, [
+                // On précise à quelle entité on fait référence
+                'class' => Category::class,
+                // On indique l'information qui va s'afficher pour chaque option
+                // ici le name des catégories
+                'choice_label' => 'name'
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Ajouter'

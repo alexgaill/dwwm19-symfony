@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Post;
 use App\Form\CategoryType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,6 +15,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController
 {
+    #[Route('/', name:"accueil")]
+    public function accueil (ManagerRegistry $manager): Response
+    {
+        $categories = $manager->getRepository(Category::class)->findAll();
+        $posts = $manager->getRepository(Post::class)->findAll();
+
+        return $this->render('category/home.html.twig',[
+            'categories' => $categories,
+            'posts' => $posts
+        ]);
+    }
+
     #[Route('/category', name: 'app_category')]
     public function index(ManagerRegistry $manager): Response
     {

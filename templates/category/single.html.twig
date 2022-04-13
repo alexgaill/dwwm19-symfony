@@ -2,6 +2,13 @@
 
 {% block body %}
     <h1>{{ category.name }}</h1>
+    
+    <ul>
+    {# On parcourt la liste des articles associés à la catégorie pour en faire la liste #}
+        {% for post in category.posts %}
+            <li>{{post.title}}</li>
+        {% endfor %}
+    </ul>
 {% endblock %}
 
 {# {% %} => <?php ?>

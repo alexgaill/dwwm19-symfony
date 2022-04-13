@@ -21,15 +21,21 @@ class AppFixtures extends Fixture
             $category->setName($faker->words(2, true));
             // On ajoute la catégorie à la file d'attente de l'enregistrement
             $manager->persist($category);
-        }
+            // On insert la boucle de création d'articles
+            // dans la boucle des catégories pour pouvoir
+            // prendre en compte l'association entre les deux.
 
-        for ($j=0; $j < 10; $j++) { 
-            $post = new Post;
-            $post->setTitle($faker->words(5, true))
+            for ($j=0; $j < 10; $j++) { 
+                $post = new Post;
+                $post->setTitle($faker->words(5, true))
                 ->setContent($faker->paragraphs(3, true))
-                ->setCreatedAt($faker->dateTime());
-
-            $manager->persist($post);
+                ->setCreatedAt($faker->dateTime())
+                // On associe la catégorie nouvellement crée
+                // à l'article qui est généré.
+                ->setCategory($category);
+                
+                $manager->persist($post);
+            }
         }
         // On exécute tous les enregistrements
         $manager->flush();

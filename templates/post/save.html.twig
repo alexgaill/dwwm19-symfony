@@ -6,16 +6,17 @@
     <h1 class="my-3">Création d'un nouvel article</h1>
 
     {{form_start(form)}}
-        <div class="form-control">
+        <div>
             {{form_label(form.title)}}
             {{form_widget(form.title)}}
             {{form_help(form.title)}}
         </div>
-        <div class="form-control">
+        <div>
             {{form_label(form.content)}}
             {{form_widget(form.content)}}
         </div>
-        <div class="form-control">
+        {{form_row(form.category)}}
+        <div>
             {{form_widget(form.submit, {attr: {'class':'btn btn-primary'}})}}
         </div>
     {{form_end(form)}}
