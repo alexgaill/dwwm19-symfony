@@ -55,7 +55,7 @@ Vous pouvez retrouver le projet sur <https://github.com/alexgaill/dwwm19-symfony
 
 ## Pour aller plus loin vous pouvez:
 
-> ### Rejoindre la communauté sur [discord](https://discord.gg/rb4bVeZX)
+> ### Rejoindre la communauté sur [discord](https://discord.gg/zDm8RX8jYb)
 > Vous serez avertis des dernières news de cours, vous agrandirez la communauté d'entraide d'étudiants et devs juniors.
 >
 > ### Participer aux lives [twitch](https://www.twitch.tv/alex_gaill)

@@ -44,6 +44,18 @@ class PostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post = $form->getData();
+            // On récupère les informations de l'image reçue à travers le form
+            $picture = $form->get('picture')->getData();
+            if ($picture) {
+                // On génère un nouveau nom de fichier pour éviter les conflits entre les fichiers existants
+                $imageName = md5(uniqid()). "." .$picture->guessExtension();
+                // On déplace le fichier dans le dossier définit par le paramètre upload_dir
+                // On copie ce fichier avec le nom qui vient d'être généré
+                $picture->move($this->getParameter('upload_dir'), $imageName);
+                // On enregistre en BDD le nouveau nom de fichier
+                $post->setPicture($imageName);
+            }
+
             $post->setCreatedAt(new \DateTime());
             $em = $manager->getManager();
             $em->persist($post);

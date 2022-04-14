@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\Post;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -30,6 +31,10 @@ class PostType extends AbstractType
                 // On indique l'information qui va s'afficher pour chaque option
                 // ici le name des catégories
                 'choice_label' => 'name'
+            ])
+            ->add('picture', FileType::class, [
+                'label' => "Image de l'article",
+                'mapped' => false
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Ajouter'

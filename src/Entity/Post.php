@@ -33,6 +33,10 @@ class Post
     #[ORM\JoinColumn(nullable: false)]
     private $category;
 
+    #[ORM\Column(type: 'string', length: 40, nullable: true)]
+    #[Assert\File(mimeTypes:['image/jpg', 'image/png'])]
+    private $picture;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -82,6 +86,18 @@ class Post
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }
