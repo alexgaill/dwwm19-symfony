@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Post
 {
     #[ORM\Id]
@@ -26,7 +28,8 @@ class Post
     private $content;
 
     #[ORM\Column(type: 'datetime')]
-    #[Assert\DateTime()]
+    // #[Assert\DateTime()]
+    // TODO: Modifier la contrainte pour être acceptée par l'update
     private $createdAt;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'posts')]
@@ -90,15 +93,30 @@ class Post
         return $this;
     }
 
-    public function getPicture(): ?string
+    public function getPicture(): string|File|null
     {
         return $this->picture;
     }
 
-    public function setPicture(?string $picture): self
+    public function setPicture(string|File|null $picture): self
     {
         $this->picture = $picture;
 
         return $this;
+    }
+
+    #[ORM\PostRemove]
+    public function deletePicture(): void
+    {
+        // 1. On vérifie que le fichier existe
+        if (file_exists(__DIR__.'/../../public/img/upload/'. $this->picture)) {
+
+            // 2. On supprime le fichier
+            unlink(__DIR__.'/../../public/img/upload/'. $this->picture);
+        }
+        // 3. On indique quand utiliser cette méthode grâce aux évènements:
+        // #[ORM\HasLifecycleCallbacks]à ajouter sur la class
+        // #[ORM\PostRemove] à ajouter sur la méthode qui prend l'évènement
+
     }
 }

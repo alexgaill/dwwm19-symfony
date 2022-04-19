@@ -34,7 +34,8 @@ class PostType extends AbstractType
             ])
             ->add('picture', FileType::class, [
                 'label' => "Image de l'article",
-                'mapped' => false
+                'mapped' => false,
+                'required' => false
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Ajouter'
