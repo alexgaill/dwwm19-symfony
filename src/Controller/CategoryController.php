@@ -18,8 +18,8 @@ class CategoryController extends AbstractController
     #[Route('/', name:"accueil")]
     public function accueil (ManagerRegistry $manager): Response
     {
-        $categories = $manager->getRepository(Category::class)->findAll();
-        $posts = $manager->getRepository(Post::class)->findAll();
+        $categories = $manager->getRepository(Category::class)->getLast5();
+        $posts = $manager->getRepository(Post::class)->getLast5byDate('ipsum');
 
         return $this->render('category/home.html.twig',[
             'categories' => $categories,

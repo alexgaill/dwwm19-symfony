@@ -45,32 +45,23 @@ class PostRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Post[] Returns an array of Post objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Retourne les articles les plus récents qui contiennent le mot-clé $keyword
+     * dans le titre ou le contenu de l'article
+     *
+     * @return Post[]
+     */
+    public function getLast5byDate (string $keyword): array
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $qb = $this->createQueryBuilder('p');
+        $qb->where($qb->expr()->like('p.title', $qb->expr()->literal('%'.$keyword.'%')))
+            ->orWhere($qb->expr()->like('p.content', $qb->expr()->literal('%'.$keyword.'%')))
+            ->orderBy('p.createdAt', 'DESC')
+            ->setMaxResults(5)
+            // ->setParameter('keyword', $keyword)
+            ;
+        return $qb->getQuery()
+                ->getResult()
+                ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Post
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

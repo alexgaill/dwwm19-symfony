@@ -45,6 +45,25 @@ class CategoryRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return Category[]
+     */
+    public function getLast5(): array
+    {
+        // createQueryBuilder créé la requête sur la table sélectionnée par l'alias (c pour catégorie)
+        return $this->createQueryBuilder('c')
+                // orderBy ajoute le ORDER BY à la requête
+                ->orderBy('c.id', 'DESC')
+                // setMaxResults ajoute la LIMIT
+                ->setMaxResults(5)
+                ->getQuery()
+                ->getResult()
+                ;
+    }
+
+
     // /**
     //  * @return Category[] Returns an array of Category objects
     //  */
