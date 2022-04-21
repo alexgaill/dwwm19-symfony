@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use Doctrine\Persistence\ManagerRegistry;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,6 +38,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/post/save', name:'save_post', methods: ['GET', 'POST'])]
+    #[IsGranted(data:'ROLE_ADMIN', message: "Vous n'avez pas les autorisations nécessaires", statusCode: 403)]
     public function save(Request $request, ManagerRegistry $manager): Response
     {
         $post = new Post();
@@ -73,6 +75,10 @@ class PostController extends AbstractController
     #[Route('/post/{id}/update', name:'update_post', requirements:['id' => "[0-9]+"], methods:["GET", "POST"])]
     public function update ($id, ManagerRegistry $manager, Request $request):Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            $this->addFlash('danger', "Vous n'avez pas les droits pour modifier un article");
+            return $this->redirectToRoute('accueil');
+        }
         $post = $manager->getRepository(Post::class)->find($id);
         
         if ($post){
@@ -131,6 +137,8 @@ class PostController extends AbstractController
     #[Route("/post/{id}/delete", name:'delete_post', requirements:['id' => "[0-9]+"], methods:["GET"])]
     public function delete($id, ManagerRegistry $manager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
         $post = $manager->getRepository(Post::class)->find($id);
         if ($post) {
             $em = $manager->getManager();

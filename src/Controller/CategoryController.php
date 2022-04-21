@@ -7,6 +7,7 @@ use App\Entity\Post;
 use App\Form\CategoryType;
 use App\Form\SearchFormType;
 use Doctrine\Persistence\ManagerRegistry;
+// use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+// #[IsGranted()]
 class CategoryController extends AbstractController
 {
     #[Route('/', name:"accueil")]
