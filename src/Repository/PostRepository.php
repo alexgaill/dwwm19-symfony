@@ -51,7 +51,7 @@ class PostRepository extends ServiceEntityRepository
      *
      * @return Post[]
      */
-    public function getLast5byDate (string $keyword): array
+    public function getLast5byDate (string $keyword): ?array
     {
         $qb = $this->createQueryBuilder('p');
         $qb->where($qb->expr()->like('p.title', $qb->expr()->literal('%'.$keyword.'%')))
@@ -63,5 +63,16 @@ class PostRepository extends ServiceEntityRepository
         return $qb->getQuery()
                 ->getResult()
                 ;
+    }
+
+    public function findWithSearchword ($searchword): ?array
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->where($qb->expr()->like('p.title', $qb->expr()->literal('%'. $searchword . '%')))
+            ->join('p.category', 'c')
+            ->orWhere($qb->expr()->like('p.content', $qb->expr()->literal('%'. $searchword . '%')))
+            ->orWhere($qb->expr()->like('c.name', $qb->expr()->literal('%'. $searchword .'%')))
+        ;
+        return $qb->getQuery()->getResult();
     }
 }

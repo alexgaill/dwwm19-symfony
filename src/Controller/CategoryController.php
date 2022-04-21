@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Post;
 use App\Form\CategoryType;
+use App\Form\SearchFormType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -16,14 +17,26 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     #[Route('/', name:"accueil")]
-    public function accueil (ManagerRegistry $manager): Response
+    public function accueil (ManagerRegistry $manager, Request $request): Response
     {
         $categories = $manager->getRepository(Category::class)->getLast5();
         $posts = $manager->getRepository(Post::class)->getLast5byDate('ipsum');
+        $filteredPosts = array();
 
-        return $this->render('category/home.html.twig',[
+        $form = $this->createForm(SearchFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $searchWord = $form->get('searchWord')->getData();
+            $filteredPosts = $manager->getRepository(Post::class)->findWithSearchword($searchWord);
+        }
+        // dump($filteredPosts);
+        // die();
+
+        return $this->renderForm('category/home.html.twig',[
             'categories' => $categories,
-            'posts' => $posts
+            'posts' => $posts,
+            'filteredPosts' => $filteredPosts,
+            'form' => $form
         ]);
     }
 

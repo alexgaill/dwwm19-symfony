@@ -1,23 +1,46 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-<div class="text-center">
-    <h1 class="my-3">Bien sur mon SuperBlog</h1>
+	<h1 class="my-3">Bien sur mon SuperBlog</h1>
+	<div class="row">
+		<div class="col-9">
+			<div class="text-center">
+            {# <pre>
+                {{ dump(filteredPosts) }}
+            </pre> #}
+            {% if filteredPosts %}
+                <ul class="text-left">
+					{% for post in filteredPosts %}
+						<li>{{ post.title }}
+							- catégorie:
+							{{post.category.name}}</li>
+					{% endfor %}
+				</ul>
+                
+            {% else %}
+                
+				<h2>Retrouvez la liste des catégories</h2>
 
-    <h2>Retrouvez la liste des catégories</h2>
+				<ul class="text-left">
+					{% for category in categories %}
+						<li>{{ category.name }}</li>
+					{% endfor %}
+				</ul>
 
-    <ul>
-        {% for category in categories %}
-            <li>{{ category.name }}</li>
-        {% endfor %}
-    </ul>
+				<h2>Retrouvez la liste des articles</h2>
 
-    <h2>Retrouvez la liste des articles</h2>
-
-    <ul>
-        {% for post in posts %}
-            <li>{{ post.title }} - catégorie: {{post.category.name}}</li>
-        {% endfor %}
-    </ul>
-</div>
+				<ul class="text-left">
+					{% for post in posts %}
+						<li>{{ post.title }}
+							- catégorie:
+							{{post.category.name}}</li>
+					{% endfor %}
+				</ul>
+            {% endif %}
+			</div>
+		</div>
+		<div class="col-3">
+			{{form(form)}}
+		</div>
+	</div>
 {% endblock %}
